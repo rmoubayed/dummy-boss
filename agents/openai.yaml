@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dummy Boss"
+  short_description: "Delegate thinking and work to Astra Low subagents"
+  default_prompt: "Use $dummy-boss to delegate this task to Astra Low subagents while you coordinate and report the verified result."
