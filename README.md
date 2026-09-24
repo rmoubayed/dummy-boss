@@ -1,73 +1,98 @@
 # dummy-boss
 
-A Codex skill for a lightweight orchestrator that delegates substantive thinking and work to **Astra Low** subagents.
+A **provider-neutral Agent Skill** for a lightweight boss that delegates substantive thinking and work to subagents.
 
-Choose your parent model yourself, such as **Luna at extra high**, then invoke `$dummy-boss`. Workers handle planning, research, implementation, writing, testing, and review. The parent assigns work, coordinates dependencies, checks completion evidence, and reports the result.
+Use any parent model your agent host supports. Workers handle planning, research, implementation, writing, testing, and review; the parent coordinates and reports verified results. **Astra Low remains the preferred worker default**, and you can select models from any provider available through your host or an already configured integration.
+
+The package follows the open [Agent Skills specification](https://agentskills.io/specification). Model-provider access and real delegation depend on the host: installing a skill cannot add unavailable models or subagent tools.
 
 ## Use it
 
+Ask your agent:
+
 ```text
-$dummy-boss Build a settings page for this app and verify it works.
+Use dummy-boss to build a settings page for this app and verify it works.
 ```
 
 ```text
-$dummy-boss Research these three options and recommend one with sources.
+Use dummy-boss with my host's configured worker model to research these options.
 ```
 
 ```text
-$dummy-boss Use Astra medium for the reviewer; keep the other workers on Astra low.
+Use dummy-boss. Use the available Claude model I selected for implementation
+and Astra low for review through my configured worker integration.
 ```
 
 ```text
-$dummy-boss Use Sol low for all workers on this task.
+Use dummy-boss with my selected Gemini model for all workers on this task.
 ```
 
-The default worker settings are `gpt-6-astra` and `low`. A user override can target one worker role, the current task, or the remaining conversation. A model-only override retains low effort when supported. The skill never changes the parent's model or account configuration.
+Specify an exact available model or configured worker role when needed. Overrides can apply to one role, one task, or the remaining conversation. If Astra is unavailable and no alternative is authorized, the boss asks once for a supported choice. It never silently switches your parent model.
+
+Use your host's invocation syntax: `$dummy-boss` in Codex, `/dummy-boss` in Claude Code, or a natural-language request in hosts that activate skills that way. Named effort levels are provider-specific; if the selected worker has no effort control, the skill reports that and uses native behavior unless you required an exact setting.
 
 ## Install
 
-Clone this repository into your personal skills directory as `dummy-boss`. This Codex desktop environment discovers personal skills under `~/.codex/skills`; use `$CODEX_HOME/skills` instead if you have configured a different Codex home. Other hosts may use different discovery locations: consult their current skill documentation.
+Install the entire repository folder, including `references/`, under the name `dummy-boss` in your host's skill directory. Do not overwrite an existing installation without inspecting it.
 
-PowerShell, for the default location:
+### Claude Code
 
-```powershell
+Clone into the personal skill directory, then invoke `/dummy-boss`. Claude Code documents this location and slash invocation in its [skills guide](https://code.claude.com/docs/en/skills).
+
+```sh
+git clone https://github.com/rmoubayed/dummy-boss.git "$HOME/.claude/skills/dummy-boss"
+```
+
+### Gemini CLI
+
+Use its [skill installer](https://geminicli.com/docs/cli/skills/), then ask it to use dummy-boss:
+
+```sh
+gemini skills install https://github.com/rmoubayed/dummy-boss.git
+```
+
+Follow the host's activation and reload prompts. Skill installation and worker availability are separate capabilities.
+
+### Codex
+
+For the desktop environment where this skill was originally created, the personal directory is `~/.codex/skills`, or `$CODEX_HOME/skills` when configured. Clone there and invoke `$dummy-boss`:
+
+```sh
 git clone https://github.com/rmoubayed/dummy-boss.git "$HOME/.codex/skills/dummy-boss"
 ```
 
-macOS/Linux shell, respecting a configured Codex home:
+The clone commands using `$HOME` also work in PowerShell. Follow your host's configured discovery location if different; see the [Codex skill guide](https://learn.chatgpt.com/docs/build-skills).
 
-```sh
-git clone https://github.com/rmoubayed/dummy-boss.git "${CODEX_HOME:-$HOME/.codex}/skills/dummy-boss"
-```
+### Other agent hosts and model providers
 
-If that directory already exists, inspect it rather than overwriting it. Start a new task or reload skills as supported by your host, then invoke `$dummy-boss`.
+Copy or clone the repository into the host's documented Agent Skills directory. If it supports custom instruction files instead, load `SKILL.md` and make its linked references available. This is a manual instruction integration, not automatic skill discovery.
 
-## What the boss does
+The core requires no OpenAI SDK, account, or tool names. It can coordinate native subagents, configured worker roles, or an already authorized external agent integration. It does not install provider bridges, collect API keys, or create provider accounts.
 
-- Delegates substantive planning as well as execution; it does not solve the task first and then ask a worker to agree.
-- Uses one worker for a small assignment and independent workers where parallel work helps.
-- Gives workers clear context, file ownership, acceptance checks, and the user's authorization boundaries.
-- Routes fixes and substantive review back to workers, and reports actual artifacts and validation.
-- Preserves model overrides and tells you if the requested delegation cannot run.
+## How it works
 
-Execution workers do their own assigned work; they do not recursively create more bosses. The workflow stays with the current assignment and its follow-ups until you change it.
+- Delegates substantive planning as well as execution; it does not solve the task first and ask a worker to agree.
+- Uses a single worker for small assignments and parallel workers for independent work.
+- Supplies clear context, ownership, acceptance checks, and authorization boundaries.
+- Handles both shared files and isolated workspaces with explicit artifact integration.
+- Routes fixes and substantive review back to workers and reports evidence of completion.
+- Adapts to actual model selectors, configured roles, effort controls, and messaging tools without inventing API fields.
 
-## Requirements and limits
+Execution workers do their own assignment rather than recursively creating more bosses. The parent retains responsibility for coordination, authorization, and evidence checking.
 
-This is an instruction skill, not a scheduler, plugin, model router service, or automatic billing control. It requires a host with task-local subagents and a supported way to select their model and reasoning effort. A skill cannot override platform restrictions or make an unavailable model available.
+## Compatibility and validation
 
-The included dispatch example matches a host exposing `collaboration.spawn_agent`. That host requires a fresh or limited-history fork to select a different worker model; a full-history fork inherits the parent. On another host, the agent must inspect the actual tool schema and disclose any mismatch.
+**Portable instructions do not mean every provider or app has been live-tested.** The original delegation smoke test ran on a Codex collaboration host. Claude Code and Gemini CLI installation guidance was checked against their documentation; their runtimes were not exercised. Other hosts must provide real delegation for the workflow to run. See [validation details](VALIDATION.md).
 
-The parent still performs coordination and evidence checking. Its selected reasoning effort remains active. Delegation can add latency and token usage; this repository makes no cost or speed guarantee. The skill does not grant new permission to publish, buy, deploy, message others, or perform destructive actions.
+If real delegation is unavailable, the skill explains that and asks whether to proceed directly or move to a supported environment. It does not role-play fake workers. Delegation may add latency and token usage; no cost or speed improvement is guaranteed.
 
 ## Files
 
-- [SKILL.md](SKILL.md): the operating instructions.
-- [agents/openai.yaml](agents/openai.yaml): skill picker metadata and an invocation prompt.
-- [references/dispatch.md](references/dispatch.md): tool-specific dispatch and worker brief guidance.
-- [VALIDATION.md](VALIDATION.md): behavioral checks and verification limits.
-
-The skill uses the standard `SKILL.md` structure described in the [official skill documentation](https://learn.chatgpt.com/docs/build-skills). For host-level delegation support, see the [official subagent documentation](https://learn.chatgpt.com/docs/agent-configuration/subagents). Runtime-specific field names in this repository come from the active tool schema, not a promise that every Codex host exposes the same API.
+- [SKILL.md](SKILL.md): provider-neutral operating instructions.
+- [references/dispatch.md](references/dispatch.md): capability resolution, worker briefs, and integration.
+- [references/codex-collaboration.md](references/codex-collaboration.md): optional adapter for the originally tested tool family.
+- [agents/openai.yaml](agents/openai.yaml): optional Codex picker metadata; other hosts do not need it.
+- [VALIDATION.md](VALIDATION.md): completed checks and their limits.
 
 ## License
 

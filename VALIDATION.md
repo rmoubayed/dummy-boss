@@ -1,6 +1,14 @@
 # Validation
 
-Checked on 2026-09-24 in a Codex desktop host exposing `collaboration.spawn_agent`.
+Initial version checked on 2026-09-24 in a Codex desktop host exposing `collaboration.spawn_agent`. The live test below applies to that original version; it is not a live test of every provider or the later portability revision.
+
+## Provider-neutral revision
+
+The revision separates host-independent operating instructions from an optional Codex collaboration adapter. It covers provider-specific model selection, configured roles, absent effort controls, authorized external integrations, and shared versus isolated workspaces.
+
+The open [Agent Skills specification](https://agentskills.io/specification), [Claude Code installation and invocation documentation](https://code.claude.com/docs/en/skills), and [Gemini CLI skill installer documentation](https://geminicli.com/docs/cli/skills/) were consulted. These establish packaging and documented installation paths, not successful end-to-end execution on those hosts. No Claude, Gemini, or other external provider runtime was launched.
+
+The revised package passed frontmatter validation, optional UI metadata checks, relative Markdown link checks, and `git diff --check`. An independent paper review covered a selected Claude role without effort controls, a selected Gemini worker with an isolated workspace, unavailable Astra without a fallback, an authorized fixed host-default worker, and no delegation capability. It found no blocking provider assumptions. An effort-only override ambiguity was corrected to preserve the currently selected model. These scenarios were not live provider tests.
 
 ## Structural checks
 
