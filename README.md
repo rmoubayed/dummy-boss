@@ -2,7 +2,7 @@
 
 A **provider-neutral Agent Skill** for a lightweight boss that delegates substantive thinking and work to subagents.
 
-Use any parent model your agent host supports. Workers handle planning, research, implementation, writing, testing, and review; the parent coordinates and reports verified results. **Astra Low remains the preferred worker default**, and you can select models from any provider available through your host or an already configured integration.
+Use any parent model your agent host supports. Workers handle planning, research, implementation, writing, testing, and review; the parent coordinates and reports verified results. **Worker defaults are selected automatically for the active provider**, so Claude Code does not ask you to choose an alternative to Astra.
 
 The package follows the open [Agent Skills specification](https://agentskills.io/specification). Model-provider access and real delegation depend on the host: installing a skill cannot add unavailable models or subagent tools.
 
@@ -15,21 +15,31 @@ Use dummy-boss to build a settings page for this app and verify it works.
 ```
 
 ```text
-Use dummy-boss with my host's configured worker model to research these options.
+Use dummy-boss to research these options.
 ```
 
 ```text
-Use dummy-boss. Use the available Claude model I selected for implementation
-and Astra low for review through my configured worker integration.
+Use dummy-boss. Override the reviewer to use medium effort for this task.
 ```
 
 ```text
-Use dummy-boss with my selected Gemini model for all workers on this task.
+Use dummy-boss with my selected worker model instead of the automatic default.
 ```
 
-Specify an exact available model or configured worker role when needed. Overrides can apply to one role, one task, or the remaining conversation. If Astra is unavailable and no alternative is authorized, the boss asks once for a supported choice. It never silently switches your parent model.
+No worker model needs to be specified for normal use. Explicit overrides can apply to one role, one task, or the remaining conversation and always take precedence. The skill never switches your parent model.
 
 Use your host's invocation syntax: `$dummy-boss` in Codex, `/dummy-boss` in Claude Code, or a natural-language request in hosts that activate skills that way. Named effort levels are provider-specific; if the selected worker has no effort control, the skill reports that and uses native behavior unless you required an exact setting.
+
+## Automatic defaults
+
+- **OpenAI:** Astra workers at low effort; for example, a Luna parent coordinates them.
+- **Anthropic / Claude:** Opus workers at low effort where configurable; for example, a Haiku parent coordinates them. The host resolves the available Opus version.
+- **Google / Gemini:** Gemini Pro workers at low thinking/effort where configurable; for example, a Flash parent coordinates them.
+- **Other providers:** the strongest suitable available reasoning/coding worker from that provider, using low effort where supported.
+
+The parent keeps whatever model and effort you selected. The boss reads the active backend and available worker catalog, resolves supported IDs or roles, and dispatches without asking you to pick routine defaults. If a preferred family is unavailable, it uses the strongest suitable available same-provider worker and tells you. Explicit model requests are never silently replaced, and the skill does not cross providers automatically.
+
+Low effort must be applied through an actual runtime control or configured role. For example, Claude Code documents worker-level `model` and `effort` in its [subagent definitions](https://code.claude.com/docs/en/sub-agents); an Agent tool may not expose an effort argument. If the needed control or role is unavailable, the skill selects Opus automatically but reports that native effort applies. Full selection and fallback rules are in [provider defaults](references/provider-defaults.md).
 
 ## Install
 
@@ -90,6 +100,7 @@ If real delegation is unavailable, the skill explains that and asks whether to p
 
 - [SKILL.md](SKILL.md): provider-neutral operating instructions.
 - [references/dispatch.md](references/dispatch.md): capability resolution, worker briefs, and integration.
+- [references/provider-defaults.md](references/provider-defaults.md): automatic provider-specific model and effort selection.
 - [references/codex-collaboration.md](references/codex-collaboration.md): optional adapter for the originally tested tool family.
 - [agents/openai.yaml](agents/openai.yaml): optional Codex picker metadata; other hosts do not need it.
 - [VALIDATION.md](VALIDATION.md): completed checks and their limits.

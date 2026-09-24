@@ -1,6 +1,6 @@
 ---
 name: dummy-boss
-description: Coordinate provider-neutral delegation of substantive thinking and execution to subagents, preferring Astra Low unless the user selects another model. Use when the user invokes dummy-boss or asks for a lightweight boss that outsources planning, research, implementation, writing, and review.
+description: Delegate thinking and execution to strong subagents automatically selected from the active provider at low effort where supported. Use when the user invokes dummy-boss or asks for a lightweight boss that outsources planning, research, implementation, writing, and review. Honor explicit model overrides.
 ---
 
 # Dummy Boss
@@ -11,12 +11,12 @@ These instructions are independent of the parent model's provider and the agent 
 
 ## Model contract
 
-- Prefer **Astra Low** for every worker, including planners and reviewers, unless the user selects another model. Resolve the model identifier from the host; `gpt-6-astra` is the identifier in the included Codex adapter, not a universal model name.
+- Automatically select a strong worker from the active provider using [provider defaults](references/provider-defaults.md): **OpenAI → Astra**, **Anthropic/Claude → Opus**, **Google/Gemini → Pro**; other providers use their available flagship reasoning/coding model. Request **low** effort where supported. This applies to planners, implementers, and reviewers. Do not ask the user to pick a model when this rule resolves an available choice.
 - Leave the parent's provider, model, and reasoning settings as the user selected them. The parent can be from any provider supported by its host. This skill does not switch the parent or change account configuration.
-- A user instruction overrides the worker default. Honor its scope: one role, one task, or the remaining conversation. When only the model changes, retain the selected effort (low by default) if supported. When only effort changes, retain the selected worker model (Astra by default). Never silently increase effort or switch models because work seems difficult.
-- Check the active tool schema, configured worker roles, and supported models. If the selected model is unavailable, use an alternative already authorized by the user, or ask once for a supported worker model. A request to use the host's configured worker default authorizes that choice. Do not silently substitute or infer access to another provider from a model name.
+- A user instruction overrides the automatic provider default. Honor its scope: one role, one task, or the remaining conversation. When only the model changes, retain the selected effort (low by default) if supported. When only effort changes, retain the selected worker model. Never increase effort or switch models merely because work seems difficult.
+- Resolve provider, model identifiers, configured roles, and availability from the active host. If the automatic preferred family is unavailable, choose the strongest suitable available worker in the same provider and briefly report the fallback. If an explicitly requested model is unavailable, honor an already authorized fallback or ask; do not replace an explicit choice automatically. Never cross providers just to satisfy a default. Ask only when the provider or a suitable available worker cannot be resolved.
 - Request low effort when the host and selected model expose a compatible control. If no effort control exists, omit it and disclose that the provider's native behavior applies; do not invent a low setting or claim equivalent reasoning budgets across providers. If the user explicitly requires an exact unsupported setting, resolve that constraint before dispatch.
-- Select the worker model explicitly when possible. If selection is role-based or fixed, inspect the configured role and use it only when it matches the user's selection or authorized fallback. Distinguish requested settings, configured settings, and runtime-confirmed settings. Use fresh or limited context when the host requires it for model overrides; supply a complete brief.
+- Select the worker model explicitly when possible. If selection is role-based or fixed, inspect the configured role and use it only when it matches the resolved automatic selection, explicit user choice, or allowed fallback. Distinguish requested settings, configured settings, and runtime-confirmed settings. Use fresh or limited context when the host requires it for model overrides; supply a complete brief.
 
 ## Keep the boss lightweight
 

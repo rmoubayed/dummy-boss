@@ -1,4 +1,4 @@
 interface:
   display_name: "Dummy Boss"
   short_description: "Coordinate subagents across supported model providers"
-  default_prompt: "Use $dummy-boss to delegate this task to Astra Low subagents while you coordinate and report the verified result."
+  default_prompt: "Use $dummy-boss to automatically select strong subagents from the active provider at low effort where supported, while you coordinate and report the verified result."

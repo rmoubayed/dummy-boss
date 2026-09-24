@@ -4,6 +4,10 @@ Initial version checked on 2026-09-24 in a Codex desktop host exposing `collabor
 
 ## Provider-neutral revision
 
+The automatic-defaults revision supersedes the earlier universal Astra preference and the historical unavailable-Astra scenario below. Ordinary use now resolves OpenAI to Astra, Claude to Opus, Gemini to Pro, and other providers to a suitable flagship worker. Missing automatic defaults fall back within the same provider; explicit user choices retain their stricter override behavior. No other provider was live-tested.
+
+This revision passed the skill validator, UI metadata and local-link checks, and whitespace checks. Independent paper review covered Claude/Haiku to Opus, Gemini/Flash to Pro, OpenAI/Luna to Astra, same-provider fallback, unavailable explicit choices, nonnative backends, and missing effort selectors. It found one stale restriction on configured roles; the final wording now explicitly permits the resolved automatic selection. No cross-provider runtime test was performed.
+
 The revision separates host-independent operating instructions from an optional Codex collaboration adapter. It covers provider-specific model selection, configured roles, absent effort controls, authorized external integrations, and shared versus isolated workspaces.
 
 The open [Agent Skills specification](https://agentskills.io/specification), [Claude Code installation and invocation documentation](https://code.claude.com/docs/en/skills), and [Gemini CLI skill installer documentation](https://geminicli.com/docs/cli/skills/) were consulted. These establish packaging and documented installation paths, not successful end-to-end execution on those hosts. No Claude, Gemini, or other external provider runtime was launched.

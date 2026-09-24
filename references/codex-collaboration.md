@@ -12,7 +12,7 @@ Use this only when the active host exposes `collaboration.spawn_agent` with the 
 }
 ```
 
-Replace the message with a complete brief and change model/effort when the user overrides them. In the tested tool schema, `fork_turns: "all"` and omitted fork settings inherit the parent and do not accept model/effort overrides. Use `"none"` or a supported limited numeric-string fork.
+This is the OpenAI/Astra default example, not a provider-independent default. Resolve the active provider and supported model first; replace the message with a complete brief and honor user overrides. In the tested tool schema, `fork_turns: "all"` and omitted fork settings inherit the parent and do not accept model/effort overrides. Use `"none"` or a supported limited numeric-string fork.
 
 Use `send_message` for a running worker, `followup_task` for an idle worker, and the available wait tool for results. Follow-ups do not change model settings. Preserve the returned worker ID and distinguish requested settings from any runtime confirmation.
 

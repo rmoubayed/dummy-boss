@@ -5,7 +5,7 @@ The host's exposed tools and configured worker roles are authoritative. There is
 ## Resolve capabilities
 
 1. Identify real delegation tools or an already authorized worker integration. Loading a skill does not itself create subagents.
-2. Resolve the user's worker selection, or the Astra Low preference, against available models and roles. If unavailable, use an already authorized fallback or ask for a supported choice. Do not assume that Claude, Gemini, OpenAI, or another provider's models are interchangeable or accessible from every host.
+2. Honor explicit worker selections first; otherwise resolve the active provider and automatically choose its strong worker using [provider defaults](provider-defaults.md). Unavailable automatic defaults fall back to the strongest suitable available worker in the same provider, with a brief disclosure. Unavailable explicit selections require an authorized fallback or clarification. Do not ask for routine defaults or assume access to another provider.
 3. Use only supported controls. Map the user's effort preference to a documented compatible setting; do not equate token budgets with another provider's named effort levels. When no control exists, disclose native behavior and omit the field, unless an exact user requirement makes that a blocker.
 4. Check context inheritance, concurrency, tool permissions, and shared versus isolated workspaces. Pass required instructions explicitly if workers do not inherit them.
 5. Dispatch through the actual interface. Record the returned identifier, selected model or role, available configuration evidence, assignment, ownership, and result. Runtime confirmation may be absent; do not present requested settings as independently verified.
